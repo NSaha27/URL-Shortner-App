@@ -104,24 +104,6 @@
         }
       };
 
-      // const fetchStyles = async () => {
-      //   const response = await fetch("/styles");
-      //   if (!response.ok) {
-      //     const errorMessage = response.text();
-      //     console.error(errorMessage);
-      //     alert("*unable to load styles!");
-      //     return false;
-      //   } else {
-      //     const textStream = response.body.pipeThrough(new TextDecoderStream());
-      //     let chunks = "";
-      //     for await (const textChunk of textStream) {
-      //       chunks += textChunk;
-      //     }
-      //     const styles = JSON.parse(chunks);
-      //     styleEl.append(styles);
-      //   }
-      // };
-
       urlShortnerForm.addEventListener("submit", async (ev) => {
         ev.preventDefault();
         const formData = new FormData(ev.target);
@@ -151,7 +133,6 @@
         }
       });
 
-      // fetchStyles();
       fetchURLs();
     </script>
   </body>
