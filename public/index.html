@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <title>URL Shortner</title>
+  </head>
+  <body>
+    <main class="main">
+      <div class="add-url">
+        <h2 class="heading">URL Shortner</h2>
+        <form action="/" method="post" id="urlShortnerForm" class="">
+          <div class="form-group">
+            <label for="actualURL" class="form-label">Enter URL</label><br />
+            <input
+              type="url"
+              name="actualURL"
+              id="actualURL"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="shortCode" class="form-label"
+              >Custom Short URL (optional)</label
+            ><br />
+            <input
+              type="text"
+              name="shortCode"
+              id="shortCode"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <button type="submit" class="add-url-btn">Shorten</button>
+          </div>
+        </form>
+      </div>
+      <div class="display-url">
+        <h2 class="heading">Shortened URLs</h2>
+        <div class="url-list" id="shortenedURLList"></div>
+      </div>
+    </main>
+
+    <script>
+      const urlShortnerForm = document.querySelector("#urlShortnerForm");
+      const shortenedURLList = document.querySelector("#shortenedURLList");
+
+      const fetchURLs = async () => {
+        const response = await fetch("/links");
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          console.error(errorMessage);
+          const h3 = document.createElement("h3");
+          h3.textContent = errorMessage;
+          shortenedURLList.appendChild(h3);
+        } else {
+          const textStream = response.body.pipeThrough(new TextDecoderStream());
+          let chunks = "";
+          for await (const textChunk of textStream) {
+            chunks += textChunk;
+          }
+
+          const urls = JSON.parse(chunks);
+          for (const [key, value] of Object.entries(urls)) {
+            const { actualURL, shortenedURL, qrCodeImageURL } = value;
+
+            // create a new list item and insert the actual URL, the short URL, and the QR code for that URL, into it
+            const div = document.createElement("div");
+            div.setAttribute("class", "url");
+
+            // para for QR code image
+            const p1 = document.createElement("p");
+            const img = document.createElement("img");
+            img.setAttribute("src", qrCodeImageURL);
+            img.setAttribute("alt", "");
+            p1.appendChild(img);
+
+            // para for short URL link
+            const p2 = document.createElement("p");
+            const spanP2 = document.createElement("span");
+            spanP2.textContent = "Short code - ";
+            p2.appendChild(spanP2);
+            const a = document.createElement("a");
+            a.setAttribute("href", actualURL);
+            a.setAttribute("target", "_blank");
+            a.textContent = shortenedURL;
+            p2.appendChild(a);
+
+            // para for main URL
+            const p3 = document.createElement("p");
+            p3.textContent =
+              "Actual URL - " +
+              (actualURL.length > 100
+                ? actualURL.slice(0, 101) + "..."
+                : actualURL);
+
+            div.appendChild(p1);
+            div.appendChild(p2);
+            div.appendChild(p3);
+
+            shortenedURLList.appendChild(div);
+          }
+        }
+      };
+
+      // const fetchStyles = async () => {
+      //   const response = await fetch("/styles");
+      //   if (!response.ok) {
+      //     const errorMessage = response.text();
+      //     console.error(errorMessage);
+      //     alert("*unable to load styles!");
+      //     return false;
+      //   } else {
+      //     const textStream = response.body.pipeThrough(new TextDecoderStream());
+      //     let chunks = "";
+      //     for await (const textChunk of textStream) {
+      //       chunks += textChunk;
+      //     }
+      //     const styles = JSON.parse(chunks);
+      //     styleEl.append(styles);
+      //   }
+      // };
+
+      urlShortnerForm.addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        const formData = new FormData(ev.target);
+        const actualURL = formData.get("actualURL");
+        const shortCode = formData.get("shortCode");
+        try {
+          const response = await fetch("/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ actualURL, shortCode }),
+          });
+          if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+          } else {
+            ev.target.reset();
+
+            alert("*a new URL is created!");
+            window.location.reload();
+          }
+        } catch (err) {
+          console.error(err);
+          alert("*unable to submit the form, error:", err.message);
+          window.location.reload();
+        }
+      });
+
+      // fetchStyles();
+      fetchURLs();
+    </script>
+  </body>
+</html>

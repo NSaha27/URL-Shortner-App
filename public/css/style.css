@@ -1,0 +1,116 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+.heading {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-transform: capitalize;
+  letter-spacing: 1px;
+}
+.main {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 35% 65%;
+}
+
+/* ADD URL FORM */
+.add-url {
+  padding: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+.add-url form .form-group {
+  width: 100%;
+  margin: 0 auto 1.5rem;
+}
+.add-url form .form-group .form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.add-url form .form-group .form-control {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  border: 2px solid #333;
+}
+.add-url form .form-group .add-url-btn {
+  width: 100%;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  transition: 0.2s;
+}
+.add-url form .form-group .add-url-btn:hover {
+  background-color: #000;
+}
+
+/* DISPLAY URLs */
+.display-url {
+  padding: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.display-url .url-list {
+  width: 100%;
+}
+.display-url .url-list .url {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.display-url .url-list .url img {
+  width: 120px;
+  height: 120px;
+}
+
+@media screen and (max-width: 532px) {
+  .heading {
+    font-size: 2rem;
+  }
+  .main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .add-url form .form-group .form-label {
+    font-size: 1rem;
+  }
+  .add-url form .form-group .form-control {
+    padding: 0.4rem 1rem;
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+  }
+  .display-url .url-list .url {
+    text-align: justify;
+    font-size: 0.9rem;
+  }
+  .display-url .url-list .url img {
+    width: 100px;
+    height: 100px;
+  }
+  .add-url form .form-group .add-url-btn {
+    padding: 0.9rem 0;
+    font-size: 1rem;
+  }
+}
